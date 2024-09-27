@@ -1,0 +1,31 @@
+body {
+    font-family: sans-serif;
+    background-color: black;
+    color: #979a9a;
+}
+
+.header {
+    padding: 1rem;
+    background-color: black;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.buttonRow {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem
+}
+
+.barra {
+    background-color: #333;
+    padding: 0.5px;
+    margin-bottom: 2rem;
+}
+
+
+
+
+
