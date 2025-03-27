@@ -1,64 +1,72 @@
 "use client"
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import "../../global.css";
-
-export default function signIn () {
-
+import SessionContext from "../../(components)/SessionContext.js";
+export default function SignIn () {
     const router = useRouter();
+    const { updateSession } = useContext(SessionContext);
     const url = "http://localhost:3002/financial/login";
 
     const [data, setData] = useState({
         "email": "",
         "password": "",
-    })
+    });
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setError(null);
 
+        console.log('Data: ', data);
+        
         try {
             const response = await fetch(url, {
                 method: 'POST',
                 body: JSON.stringify(data),
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
             });
-            console.log(response);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
 
+            if (!response.ok) {
+                const res = await response.json()
+                throw new Error(`${res.error}`);
+            }
             
             const result = await response.json();
+           
+            updateSession(result); 
             
-            if (result) {
+            console.log('Response data: ', result);
+            console.log("Resultado completo: ", JSON.stringify(result));
+            console.log("token: " + result.token, "id: " + result.userId);   
+
+          
+            if (result && result.userId) {
                 router.push(
-                 `/${result.user.id}`
+                 `/${result.userId}`
                 )
-              //window.location.href = "/" + result.user.id -- otra froma de realizarlo
 
             } else {
-                setError(result.message || 'Login failed');
+                setError('Error del result: ', result.message || 'Login failed');
             }
         } catch (error) {
-            setError(error.message || 'An unexpected error occurred');
+            setError("error: " + (error.message || 'An unexpected error occurred'));
         } finally {
             setLoading(false);
         }
     };
 
     return (
-
     <Form className="col-md-3 mx-auto" onSubmit={handleSubmit}>
         <h1>Sign In</h1>
         <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -73,12 +81,13 @@ export default function signIn () {
 
         {error && <p className="text-danger">{error}</p>}
 
-        <div>
-            <Button variant="outline-secondary" type="submit" disabled={loading}>
+        <div className="bottom">
+            <Button  variant="outline-secondary" type="submit" disabled={loading} className="buttonLogin">
 
             {loading ? 'Logging in...' : 'Login'}
             </Button>
-            <Link href="../password">Forgot Password</Link>
+            <Link href="../password" className="link">¿Forgot your Password?</Link>
         </div>
     </Form>
-)}
+);
+}

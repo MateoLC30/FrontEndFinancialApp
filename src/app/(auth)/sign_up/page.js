@@ -4,8 +4,9 @@ import { useState } from "react";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useRouter } from "next/navigation";
+import "../../global.css";
 
-    export default function signUp () {
+    export default function SignUp () {
 
         const router = useRouter();
 

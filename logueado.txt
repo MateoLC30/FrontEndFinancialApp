@@ -22,3 +22,12 @@ export default function RootLayout({ children }) {
     </html>
   )
 }
+
+
+front
+-- guardar el session en el localStorage despues del loguin en el frontEnd
+--  obtener el session para obtener el token o verificar una session
+
+back
+-- devolver el objeto de session
+-- crear el middleware y proteger las rutas
